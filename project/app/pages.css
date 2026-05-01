@@ -1,0 +1,237 @@
+/* Page-specific styles for contacts, pipeline, inbox, automation */
+
+/* Generic small avatar */
+.avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  flex-shrink: 0;
+  letter-spacing: 0;
+}
+.avatar.sm { width: 24px; height: 24px; font-size: 10px; }
+.avatar.lg { width: 40px; height: 40px; font-size: 13px; }
+.avatar.xl { width: 56px; height: 56px; font-size: 18px; }
+
+/* Tag chip */
+.tag-chip {
+  display: inline-flex;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 11px;
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1px solid var(--border-soft);
+  cursor: pointer;
+}
+.tag-chip:hover { background: var(--surface-hover); color: var(--text); }
+
+/* Contacts table */
+.contacts-table tr.row-active td {
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+.contacts-table input[type="checkbox"] {
+  accent-color: var(--accent);
+}
+
+/* ===== Pipeline ===== */
+.stage-col {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+.deal-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  padding: 12px 12px 10px;
+  cursor: grab;
+  transition: border-color .12s, transform .12s;
+}
+.deal-card:hover { border-color: var(--border-strong); transform: translateY(-1px); }
+.deal-card.ghost {
+  border-style: dashed;
+  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 60px;
+  cursor: default;
+}
+
+/* ===== Inbox ===== */
+.conv-row {
+  display: flex; gap: 10px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-soft);
+  cursor: pointer;
+  align-items: flex-start;
+}
+.conv-row:hover { background: var(--surface-2); }
+.conv-row.active {
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.msg {
+  display: flex; gap: 8px;
+  margin-bottom: 14px;
+  align-items: flex-end;
+}
+.msg.us { justify-content: flex-end; }
+.bubble {
+  padding: 8px 12px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.bubble.them { background: var(--surface); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
+.bubble.us {
+  background: color-mix(in srgb, var(--accent) 26%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--accent) 50%, transparent);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.note-bubble {
+  margin: 14px auto;
+  max-width: 70%;
+  padding: 8px 12px;
+  background: color-mix(in srgb, #F59E0B 14%, transparent);
+  border: 1px dashed color-mix(in srgb, #F59E0B 50%, transparent);
+  color: #fef3c7;
+  border-radius: 8px;
+}
+
+.composer {
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.ctx-section {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-soft);
+}
+.ctx-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-3);
+  margin-bottom: 8px;
+}
+.ctx-row {
+  display: flex; justify-content: space-between;
+  font-size: 12px;
+  padding: 5px 0;
+}
+.ctx-row > span:first-child { color: var(--text-3); }
+.ctx-row > span:last-child { color: var(--text); }
+
+/* ===== Automation builder ===== */
+.builder-rail {
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  background: var(--bg-elev);
+}
+.palette-node {
+  display: flex; gap: 8px; align-items: center;
+  margin: 4px 8px;
+  padding: 7px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: grab;
+}
+.palette-node:hover { border-color: var(--border-strong); }
+
+.builder-canvas {
+  display: flex; flex-direction: column;
+  background: var(--bg);
+  min-width: 0;
+}
+.builder-toolbar {
+  display: flex; align-items: center; gap: 4px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elev);
+}
+.builder-stage {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+  background:
+    radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 1px) 0 0 / 20px 20px,
+    var(--bg);
+  min-height: 500px;
+}
+
+.flow-node {
+  position: absolute;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-1);
+  cursor: grab;
+}
+.flow-node.selected {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent), var(--shadow-2);
+}
+.flow-node.trigger { border-left: 3px solid #F59E0B; }
+.flow-node.condition { border-left: 3px solid #A78BFA; }
+.flow-node.delay { border-left: 3px solid #6C7187; }
+.flow-node.action { border-left: 3px solid var(--accent); }
+.flow-node.end { border-left: 3px solid #22C55E; }
+
+.flow-node-dot {
+  position: absolute;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 2px solid var(--border-strong);
+  top: 50%; transform: translateY(-50%);
+}
+.flow-node-dot.in { left: -6px; }
+.flow-node-dot.out { right: -6px; }
+.flow-node.selected .flow-node-dot { border-color: var(--accent); }
+
+.flow-node-type {
+  position: absolute;
+  bottom: 6px; right: 10px;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  font-weight: 600;
+}
+
+.var-row {
+  display: flex; gap: 8px; align-items: center;
+  padding: 7px 10px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-soft);
+  border-radius: 6px;
+}
+
+.select-display {
+  display: flex; gap: 8px; align-items: center;
+  padding: 9px 11px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.select-display:hover { border-color: var(--border-strong); }
+
+/* Pill flavors used across pages */
+.pill.violet { background: color-mix(in srgb, #A78BFA 18%, transparent); color:#C4B5FD; border: 1px solid color-mix(in srgb, #A78BFA 35%, transparent); }
+.pill.pink   { background: color-mix(in srgb, #EC4899 18%, transparent); color:#F9A8D4; border: 1px solid color-mix(in srgb, #EC4899 35%, transparent); }
+.pill.teal   { background: color-mix(in srgb, #14B8A6 18%, transparent); color:#5EEAD4; border: 1px solid color-mix(in srgb, #14B8A6 35%, transparent); }
+.pill.red    { background: color-mix(in srgb, #EF4444 18%, transparent); color:#FCA5A5; border: 1px solid color-mix(in srgb, #EF4444 35%, transparent); }

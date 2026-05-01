@@ -1,0 +1,624 @@
+GHL Clone Platform
+Phase 1 — Product Specification
+April 2026 • PhantomCore • Confidential
+7 4 3 17
+Modules Months Developers Sprints Est.
+1.1 Dashboard
+& Analytics
+1.2 Contact
+Management
+1.3 Lead
+Management
+1.4 Marketing
+Campaigns
+1.5 Automation
+Engine
+1.6
+Conversation
+Inbox
+1.7 Super
+Admin & RBAC
+
+-- 1 of 20 --
+
+
+
+-- 2 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 2
+Table of Contents
+Pre-Phase 1: Foundation Sprint 3
+Phase 1 Overview 4
+1.1 Dashboard & Analytics 5
+1.1.1 KPI Widgets 5
+1.1.2 Charts & Analytics 5
+1.1.3 Activity & Navigation 5
+1.2 Contact Management 6
+1.2.1 Contact Records 6
+1.2.2 Segmentation & Lists 6
+1.2.3 Import & Export 6
+1.2.4 Activity Timeline 7
+1.3 Lead Management 7
+1.3.1 Pipeline Board 7
+1.3.2 Deal Fields 8
+1.3.3 Lead Capture & Activity 8
+1.4 Marketing Campaigns 8
+1.4.1 Email Campaigns 9
+1.4.2 SMS Campaigns 9
+1.4.3 WhatsApp Campaigns 10
+1.5 Automation Engine 10
+1.5.1 Workflow Builder 11
+1.5.2 Chatbot Builder 11
+1.6 Conversation Inbox 12
+1.6.1 Inbox Layout 12
+1.6.2 Conversation Management 12
+1.6.3 Compose & Reply 13
+1.6.4 Canned Responses & Notifications 13
+1.7 Super Admin & RBAC 14
+1.7.1 Role Hierarchy 14
+
+-- 3 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 3
+1.7.2 Super Admin Panel 14
+1.7.3 Agency Management 15
+1.7.4 RBAC Permissions Engine 15
+1.7.5 White-Label Config 15
+Sprint Plan 16
+Risks & Mitigations 17
+Out of Scope — Phase 1 17
+
+-- 4 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 4
+Pre-Phase 1: Foundation Sprint (Weeks 1–2)
+Before feature development begins, the following foundational work must be completed. All three
+developers work on this in parallel. Nothing else starts until this is solid.
+All developers must be involved in the foundation sprint. No feature work begins until auth, RBAC, and
+multi-tenancy are complete and tested.
+Authentication
+• JWT access tokens + refresh token rotation
+• Bcrypt password hashing
+• Token blacklist in Redis (for logout and revocation)
+• Session management middleware on all protected routes
+RBAC — Role-Based Access Control
+• Role hierarchy: Super Admin → Agency Admin → Sub-account Admin → Team Member
+• Permission table per role per module (view, create, edit, delete)
+• RBAC middleware applied globally on all API routes
+• Custom role scaffolding (fully expanded in Phase 3)
+Multi-tenancy
+• tenant_id on every database table — enforced at ORM (Prisma) level
+• Prisma middleware to auto-inject tenant context on every query
+• Subdomain routing — each sub-account resolves to a subdomain
+• Automated tenant isolation tests from Day 1, run on every CI build
+Infrastructure
+• Turborepo monorepo: apps/web (Next.js), apps/api (Fastify), packages/db (Prisma), packages/types
+• CI/CD pipeline via GitHub Actions — auto-deploy on merge to main
+• Environments: dev, staging, production
+• PostgreSQL (Neon) + Redis (Upstash) setup and initial migrations
+• Cloudflare R2 bucket setup and SDK integration
+• Error monitoring (Sentry) and structured logging (Pino)
+
+-- 5 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 5
+Phase 1 — Overview
+Phase 1 delivers the core CRM, multi-channel marketing campaigns, lead management, workflow
+automation, chatbot builder, and unified conversation inbox. It is the MVP that enables the first paying
+clients.
+# Module Weeks Primary Owner Dependencies
+1.
+1
+Dashboard & Analytics Wk 3–6 Frontend Dev All modules (shell first)
+1.
+2
+Contact Management Wk 3–5 Backend + FS Foundation
+1.
+3
+Lead Management Wk 5–7 Backend Dev 1.2 Contacts
+1.
+4
+Marketing Campaigns Wk 5–11 Full-stack Dev 1.2 Contacts
+1.
+5
+Automation Engine Wk
+10–15
+Full-stack Dev 1.2, 1.3, 1.4
+1.
+6
+Conversation Inbox Wk
+11–14
+Backend + FE Dev 1.2, 1.4
+WhatsApp Meta Business API application must be submitted on Day 1. Meta approval takes 24–72 hours
+minimum and is a dependency for modules 1.4 and 1.6. Also begin DLT registration for SMS (India) on Day 1.
+
+-- 6 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 6
+1.1 Dashboard & Analytics
+Central hub for real-time business metrics across all modules
+The dashboard is a consumer module — it reads from all other modules. Build the shell and layout in
+Weeks 3–4 with placeholder widgets, which are backfilled with real data as each sprint completes.
+1.1.1 KPI Widgets
+• Total Contacts — count with week-on-week change indicator
+• Active Leads — total open deals and total pipeline value
+• Campaigns Sent — count this month with delivery rate %
+• Messages Delivered — breakdown by channel: Email / SMS / WhatsApp
+• Automation Runs — total active workflows and executions this month
+• Conversations Open — unread count from inbox
+1.1.2 Charts & Analytics
+• Contact Growth Chart — new contacts over time (line chart, 30/60/90 day)
+• Campaign Performance Summary — open rate, click rate, delivery rate per channel
+• Lead Funnel Chart — contacts → leads → pipeline stages → won (funnel chart)
+• Message Volume Chart — daily send volume by channel (bar chart)
+1.1.3 Activity & Navigation
+• Recent Activity Feed — real-time log: new contacts, campaign sends, automation triggers, new leads
+• Quick Actions Panel — Create Contact, Launch Campaign, New Lead, New Automation
+• Date Range Selector — Today / Last 7 days / Last 30 days / Custom range
+• Multi-account View (Agency) — aggregate stats across all sub-accounts in one view
+Dashboard widgets are built as independent components from day one so future modules (Phase 2+) can plug in
+new data without rework.
+
+-- 7 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 7
+1.2 Contact Management
+Full lifecycle contact management with custom fields, segments, and activity tracking
+The contact is the core entity of the entire platform. Every module — campaigns, leads, automations,
+inbox — links back to a contact. The schema and API must be finalised before other modules begin.
+1.2.1 Contact Records
+• Create, read, update, delete contacts
+• Standard fields: First Name, Last Name, Email, Phone, Company, Address, Date of Birth, Source
+• Custom fields — types: Text, Number, Date, Dropdown, Multi-select, Checkbox, URL
+• Custom fields stored as JSONB on PostgreSQL — flexible per tenant, no schema migrations needed
+• Contact owner — assign to a team member
+• Source tracking — manual, import, API, campaign, form submission
+• Duplicate detection — match by email or phone on create and import
+• Contact profile page — all fields, activity timeline, linked deals, sent campaigns
+1.2.2 Segmentation & Lists
+• Tags — apply multiple tags per contact, filter by tag, bulk tag/untag
+• Static Lists — manually curated groups, add/remove contacts
+• Smart Lists — dynamic filter-based segments that auto-update as contacts match criteria
+• Bulk actions — tag, assign, add to campaign, export, delete
+– Example Smart List: tag = 'hot-lead' AND created_at > 30 days ago AND city = 'Mumbai'
+1.2.3 Import & Export
+• CSV import with column-to-field mapping UI
+• Import preview — show first 5 rows before confirming
+• Duplicate handling on import — skip / merge / create duplicate options
+• Background import job (BullMQ) for large files with progress indicator
+• CSV export — export any filtered view or smart list with field selector
+1.2.4 Activity Timeline
+• Chronological log of all contact interactions
+• Event types: Email Sent/Opened/Clicked, SMS Sent/Delivered, WhatsApp Sent/Read, Deal Created, Stage
+Changed, Tag Added, Automation Triggered, Note Added, Form Submitted
+• Manual notes — agents can add timestamped notes with rich text
+• Timeline filter — filter by event type
+• Linked to inbox — messages from inbox appear in timeline automatically
+
+-- 8 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 8
+1.3 Lead Management
+Pipeline-based lead and deal tracking from capture through close
+Leads in Phase 1 use a single default pipeline per sub-account. Multiple pipelines and advanced
+forecasting are delivered in Phase 2. Focus is a clean, fast Kanban board.
+1.3.1 Pipeline Board
+• Kanban board — drag-and-drop cards between stages
+• Default stages: New Lead → Contacted → Qualified → Proposal Sent → Won / Lost
+• Custom stage names and ordering — editable per sub-account
+• Deal card preview — contact name, deal value, assigned user, days in current stage
+• Quick edit on card — update stage, value, or assignee without opening full deal
+• List view toggle — switch between Kanban and table view
+• Filters — by assigned user, stage, source, date range
+1.3.2 Deal Fields
+• Deal name, linked contact, deal value (INR / USD configurable)
+• Expected close date and priority (Low / Medium / High)
+• Assigned team member and lead source
+• Won / Lost marking with reason dropdown
+• Custom fields on deals using same JSONB system as contacts
+1.3.3 Lead Capture & Activity
+• Manual lead creation from pipeline board or contact record
+• Automation action — 'Create Deal' node in workflow builder creates a lead automatically
+• API endpoint — external tools can POST to create leads programmatically
+• Full activity log per deal — stage changes, notes, emails sent
+• Internal notes on deal (separate from contact timeline)
+
+-- 9 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 9
+1.4 Marketing Campaigns
+Multi-channel campaign builder — Email, SMS, and WhatsApp
+All three channels share a common campaign model and targeting system. Send engines are built behind
+a provider abstraction interface — swapping providers is a config change, not a code change.
+1.4.1 Common Campaign System
+• Campaign model: name, channel, status, audience, schedule, created_by, tenant_id
+• Campaign statuses: Draft → Scheduled → Sending → Sent / Failed
+• Audience targeting — contact list, tag, smart list, or manual contact selection
+• Schedule options — send immediately or schedule for a specific date and time
+• Campaign duplication — clone any campaign as a starting point
+1.4.2 Email Campaigns
+Template Builder
+• Drag-and-drop email builder via Unlayer (embedded SDK — do not build from scratch)
+• Saved template library at agency and sub-account level
+• Merge tags: {{first_name}}, {{last_name}}, {{company}}, {{phone}}, custom field tags
+• Plain-text version auto-generated alongside HTML
+• Mobile preview toggle in the editor
+Send & Tracking
+• From name, from email, reply-to, subject line and preview text
+• Send via Resend (primary) / AWS SES (fallback)
+• Open tracking (pixel), click tracking (link wrapping)
+• Delivery webhooks: delivered, bounced, spam, unsubscribed
+• Per-campaign report: sent, delivered %, opened %, clicked %, bounced %, unsubscribed %
+• Unsubscribe link auto-injected — global opt-out list per tenant
+1.4.3 SMS Campaigns
+• SMS composer with real-time character count and segment indicator (160 chars = 1 SMS)
+• Merge tags support in SMS body
+• Provider: MSG91 (primary, India) / Twilio (fallback / international)
+• Sender ID configuration per sub-account
+• DLT template ID field on templates (required for Indian SMS compliance)
+• Delivery status tracking via webhook: queued, sent, delivered, failed
+• Opt-out handling — STOP/UNSUBSCRIBE keyword auto-adds to opt-out list
+• SMS template library — save and reuse message templates
+1.4.4 WhatsApp Campaigns
+
+-- 10 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 10
+Meta Integration
+• Meta Cloud API integration — WABA per sub-account
+• Phone number registration and verification within the platform
+• Message template sync — pull all Meta-approved templates into platform
+• Template submission workflow — submit new templates to Meta for approval from within the platform
+Campaign Send & Tracking
+• Campaign builder using approved templates only (Meta policy requirement)
+• Audience targeting with variable preview per contact
+• Delivery tracking via Meta webhooks: sent, delivered, read
+• Failed message logging with Meta error codes
+• Incoming reply capture — logged to contact activity timeline and conversation inbox
+• Opt-out handling — STOP reply marks contact as WhatsApp unsubscribed
+
+-- 11 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 11
+1.5 Automation Engine
+Visual workflow builder and flow-based chatbot builder
+The most complex module in Phase 1. Uses React Flow for the drag-and-drop canvas and BullMQ for job
+execution. A single canvas component is shared between the workflow builder and chatbot builder.
+Use React Flow for the canvas — do not build from scratch. The same canvas component serves both the
+workflow builder and chatbot builder, saving 3–4 weeks of frontend development.
+1.5.1 Workflow Builder
+Triggers (Phase 1)
+• Contact Created, Tag Added, Tag Removed
+• Campaign Event — email opened, email clicked, SMS delivered, WhatsApp read
+• Deal Stage Changed — fires when a deal moves to a specified stage
+• Form Submitted — stub for Phase 3 form builder
+• Time Delay — wait X minutes / hours / days before next step
+• Scheduled Trigger — run at a specific date/time (one-off or recurring)
+Conditions
+• If / Else branch — split flow based on a condition
+• Condition types: contact field value, tag exists/absent, deal stage, channel engagement
+• Multi-condition logic — AND / OR combinations
+Actions (Phase 1)
+• Send Email / Send SMS / Send WhatsApp (template)
+• Add Tag / Remove Tag
+• Update Contact Field — set field to specified value
+• Move Deal Stage — move contact's linked deal to a specified stage
+• Assign Contact to a team member
+• Create Deal — create a new deal linked to the contact
+• Internal Notification — send in-app notification to a team member
+• Webhook — POST contact data to an external URL (outbound integration)
+Execution & Monitoring
+• BullMQ job queue per action type — independent scaling and failure isolation
+• Per-contact execution history — which steps ran, when, and outcome
+• Workflow run log — total runs, success rate, failed steps
+• Error notifications — notify workflow owner on repeated failures
+• Rate limiting — max executions per contact per hour to prevent infinite loops
+1.5.2 Chatbot Builder
+
+-- 12 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 12
+Node Types
+• Send Message — bot sends a text message to the contact
+• Ask Question — bot asks a question, waits for any reply
+• Show Options — numbered or button options (WhatsApp list messages)
+• Capture Input — saves user's reply to a specified contact custom field
+• Condition — branch based on captured input value or contact field
+• Set Field — update contact field based on conversation data
+• Human Handoff — transfers conversation to an agent in the Conversation Inbox
+• End Conversation — closes the chatbot session for this contact
+Activation, Channels & Sessions
+• Keyword trigger — chatbot activates when contact sends a specific keyword (e.g. 'HI', 'START', 'BOOK')
+• Channels: WhatsApp (primary), SMS (fallback for simple linear flows)
+• Test mode — simulate a full conversation in the builder before publishing
+• Active sessions view — see all contacts currently mid-conversation
+• Session timeout — auto-end chatbot session after configurable inactivity period
+• Conversation log — full transcript per contact session with timestamps
+
+-- 13 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 13
+1.6 Unified Conversation Inbox
+All customer conversations across Email, SMS and WhatsApp in one view
+The conversation inbox consolidates all inbound and outbound messages across Email, SMS, and
+WhatsApp into a single threaded interface. Agents never need to switch between channel tools. Every
+conversation links back to a contact record.
+1.6.1 Inbox Layout
+• Split-pane layout — conversation list on left, active conversation thread on right
+• Contact mini-profile panel on far right — name, tags, key fields, linked deal
+• Unread count badge per channel filter and overall inbox
+• Real-time updates via WebSocket (Socket.io) — new messages appear without page refresh
+• Channel indicator badge per conversation (Email / SMS / WA icon)
+1.6.2 Conversation Management
+• Conversation statuses: Open, Resolved, Snoozed
+• Snooze — hide conversation until a set date/time, then automatically resurface
+• Assign conversation to a team member
+• Search conversations — by contact name, phone, email, or message content
+• Filter — by channel, status, assigned agent, unread only, date range
+• Sort — by most recent / oldest / unread first
+1.6.3 Compose & Reply
+• Channel selector — choose to reply via Email, SMS, or WhatsApp per message
+• Rich text for email replies (bold, italic, links, attachments)
+• Character counter for SMS, template picker for WhatsApp outbound messages
+• Merge tags in replies — insert contact field values dynamically
+• File attachments — images and documents for WhatsApp and Email
+• Send and mark resolved in one action
+• Internal notes — visible to agents only, supports @mention team members
+• @mention triggers in-app notification to the mentioned agent
+1.6.4 Canned Responses & Notifications
+• Canned responses — create and manage saved reply templates per channel
+• Search canned responses while composing — type '/' to trigger search
+• Agency-level shared + sub-account-level private canned responses
+• In-app notification bell — new messages, assignments, @mentions (real-time via WebSocket)
+• Email notification for new conversation assignment (configurable per user)
+• Browser push notifications (opt-in)
+
+-- 14 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 14
+1.7 Super Admin & RBAC
+Platform-wide administration, role hierarchy, agency management, and white-label configuration
+The Super Admin module is the control centre of the entire platform. It sits above all tenants and manages
+the agency layer. Every role, permission, agency account, and white-label configuration is controlled from
+here. This module is foundational — it must be built in the foundation sprint before any other feature work
+begins.
+RBAC and multi-tenancy are built in Weeks 1–2 (Foundation Sprint). The Super Admin UI panel is built in Weeks
+3–5 in parallel with Contact development. White-label config UI ships in Week 6 alongside the Agency Portal.
+1.7.1 Role Hierarchy
+The platform enforces a strict 5-level role hierarchy. Each level can only manage roles below it.
+Permissions flow downward and cannot be escalated by a lower role.
+Role Scope Key Capabilities
+Super Admin Platform-wide Create/suspend agencies, global config, billing oversight, platform
+announcements, impersonate any user for support
+Agency Admin Agency + all
+sub-accounts
+Create sub-accounts, assign team members, configure white-label
+branding, view all sub-account data
+Sub-account
+Admin
+Single
+sub-account
+Full access within their sub-account — manage contacts, campaigns,
+automations, inbox, team members
+Team Member Single
+sub-account
+Assigned permissions only — e.g. can manage inbox but not
+campaigns, based on role config
+Custom Role Single
+sub-account
+Granular permission set defined by Sub-account Admin — mix and
+match module access
+1.7.2 Super Admin Panel
+Accessible only to Super Admin users. A separate admin portal (e.g. admin.yourdomain.com) distinct from
+the agency-facing UI.
+• Agency list — view all registered agencies, status (Active / Suspended / Trial), plan, creation date
+• Create agency — provision a new agency account with name, owner email, plan, and custom domain
+• Suspend / reactivate agency — suspend all logins and API access for a given agency
+• Impersonate — log in as any agency admin or sub-account user for support debugging (audit logged)
+• Platform announcements — broadcast in-app banner messages to all agencies or specific ones
+• Global feature flags — enable/disable modules per agency (e.g. WhatsApp not yet available for a specific
+agency)
+• Usage stats — contacts count, campaign sends, active automations per agency
+
+-- 15 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 15
+• Audit log — every Super Admin action logged with timestamp, actor, and target
+1.7.3 Agency Management (Agency Admin View)
+Agency Admins manage their own sub-accounts and team members from the Agency Portal.
+• Sub-account list — view all sub-accounts under the agency, status, last activity
+• Create sub-account — provision a new sub-account with name, industry, owner assignment
+• Suspend sub-account — temporarily disable login and access for a sub-account
+• Switch to sub-account — agency admin can jump into any sub-account as an admin (audit logged)
+• Team members — invite team members to the agency level or directly to a sub-account
+• Seat management — view how many team member seats are used across sub-accounts
+• Agency-level settings — default timezone, date format, notification preferences
+1.7.4 RBAC Permissions Engine
+Permissions are stored per role per sub-account. The backend enforces them on every API request —
+client-side role checks are decorative only.
+Module Granular Permissions
+Contacts view_contacts, create_contact, edit_contact, delete_contact, export_contacts,
+import_contacts
+Leads view_pipeline, manage_deals, delete_deals
+Campaigns view_campaigns, create_campaign, send_campaign, delete_campaign
+Automation view_workflows, create_workflow, activate_workflow, delete_workflow, manage_chatbots
+Inbox view_inbox, reply_conversation, assign_conversation, resolve_conversation
+Reports view_reports, export_reports
+Settings manage_team, manage_roles, manage_integrations, manage_billing
+• Custom role builder — Sub-account Admins pick individual permissions from the table above to create
+named roles (e.g. 'Sales Rep', 'Support Agent')
+• Role assignment — assign one role per team member per sub-account
+• Permission inheritance — Agency Admin inherits all sub-account permissions automatically, no config
+needed
+• Backend enforcement — Fastify permission middleware runs on every protected route, reads role from
+JWT, checks DB permissions
+• Permission cache — role → permission map cached in Redis (TTL 5 min) to avoid DB hit on every request
+1.7.5 White-Label Configuration (Agency Admin)
+
+-- 16 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 16
+Each agency can fully white-label the platform for their clients. Sub-accounts see the agency's brand, not
+PhantomCore's brand.
+Agency Name Displayed in the browser tab, emails, and login page header
+Logo Light mode + dark mode logo variants — stored in Cloudflare R2, served
+via CDN
+Favicon 16×16 / 32×32 favicon for browser tab
+Primary Colour Hex colour for buttons, active states, links — applied via CSS variable
+Custom Domain e.g. app.youragency.com → routed via Cloudflare CNAME to platform
+servers
+Email Sender Name e.g. 'Notifications from YourAgency' — used in all system emails
+Email Sender Domain Custom sending domain (e.g. mail.youragency.com) verified via DNS (SPF,
+DKIM)
+Login Page Copy Custom headline and tagline on the sub-account login page
+Support Email Shown in footer of system emails and error pages — routes to agency's
+support
+Hide Powered By Option to remove all PhantomCore branding from the UI (Phase 1 optional)
+Custom domain routing works via Cloudflare: agency sets a CNAME record pointing to the platform. The API
+reads the Host header on every request, looks up the agency by domain in Redis/DB, and loads the correct
+branding config. SSL is handled by Cloudflare automatically.
+
+-- 17 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 17
+Sprint Plan — 4 Month Delivery
+Development runs across three parallel tracks. Adjust weeks based on team velocity after the first sprint
+review.
+Weeks Backend Track Frontend Track Integration / DevOps
+Wk 1–2 Foundation: Auth, RBAC engine,
+multi-tenancy, DB schema, Super
+Admin data model
+Project setup, design system,
+component library, Super Admin
+portal shell
+Monorepo, CI/CD, AWS infra
+setup, Docker + Nginx config
+Wk 3–5 Super Admin panel APIs + Agency
+CRUD; Contact APIs, custom fields,
+segments
+Super Admin UI (agency list, create,
+suspend); Contact list, detail view
+CSV import worker (BullMQ),
+submit Meta WABA
+application
+Wk 5–7 White-label config API, custom
+domain resolver; Lead / deal APIs,
+pipeline stages
+Agency Portal white-label settings
+UI; Kanban board, deal cards,
+dashboard shell
+Cloudflare domain routing,
+CNAME setup, dashboard
+widget API contracts
+Wk 6–9 Email + SMS campaign engines,
+provider abstraction, webhooks
+Campaign builder UI, Unlayer email
+editor, SMS composer
+Resend + MSG91
+integration, delivery
+webhooks
+Wk
+8–11
+WhatsApp campaign engine, Meta
+API, template sync
+WhatsApp builder UI, template
+picker, delivery report
+Meta webhook verification,
+R2 storage
+Wk
+10–14
+Automation engine, BullMQ workflow
+execution, chatbot session engine
+React Flow canvas, workflow +
+chatbot node panels
+Automation test harness,
+rate limit config
+Wk
+11–14
+Conversation inbox API, WebSocket
+server (Socket.io), canned
+responses
+Inbox layout, compose UI, real-time
+updates
+Socket.io + Redis adapter,
+push notifications
+Wk
+15–17
+Bug fixes, performance, query
+optimisation, API hardening, RBAC
+audit
+Dashboard backfill, mobile
+responsive, UX polish
+Load testing, tenant isolation
+audit, staging deploy
+
+-- 18 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 18
+Risks & Mitigations
+Risk Impact Mitigation
+WhatsApp Meta API approval
+delays
+High Submit WABA application Day 1. Use Meta sandbox for
+development from Week 3. Never start WhatsApp work while
+waiting for full approval.
+Automation engine scope creep High Limit Phase 1 strictly to listed triggers and actions. Any additions go
+on Phase 2 backlog. No exceptions during sprints.
+Tenant data bleed between
+sub-accounts
+Critical Write automated tenant isolation tests from Week 2. Run on every
+CI build. Test with 3 simultaneous tenants in staging environment.
+Unlayer email builder integration
+issues
+Medium Spike integration in Week 3 before campaign sprint begins. Have
+plain-text editor as emergency fallback.
+React Flow canvas performance
+with large flows
+Medium Limit visible nodes, implement virtualization if flow exceeds 50
+nodes. Test with realistic data early.
+DLT registration delays for SMS
+(India)
+Medium Start DLT registration on Week 1 in parallel with development. Use
+international Twilio numbers in testing environment.
+Real-time inbox message delays Medium Use Socket.io with Redis adapter for multi-instance support. Load
+test WebSocket connections in Week 14.
+Out of Scope — Phase 1
+The following items are explicitly excluded from Phase 1. Any request to include them during Phase 1
+sprints must be escalated to the product owner and placed on the Phase 2 backlog.
+• Social media post scheduling and management
+• AI content generation (captions, email copy, SMS copy)
+• Calendar and appointment booking
+• Reputation and review management
+• Telephony and call centre integration
+• Payments, invoicing, and subscriptions
+• Funnel and landing page builder
+• White-label agency portal and custom domains
+• Multiple pipelines — single default pipeline only in Phase 1
+• Advanced custom role creation — roles are pre-defined in Phase 1
+
+-- 19 of 20 --
+
+GHL Clone Platform — Phase 1 Specification Confidential • PhantomCore
+Phase 1 | April 2026 Page 19
+Scope changes during Phase 1 sprints will be logged, estimated, and scheduled for Phase 2. No unplanned
+features will be added mid-sprint under any circumstances.
+
+-- 20 of 20 --
+

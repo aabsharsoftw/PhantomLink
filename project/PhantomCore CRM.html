@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>PhantomCore CRM — UI Exploration</title>
+<meta name="viewport" content="width=1600"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"/>
+<link rel="stylesheet" href="app/tokens.css"/>
+<link rel="stylesheet" href="app/shell.css"/>
+<link rel="stylesheet" href="app/page-dashboard.css"/>
+<link rel="stylesheet" href="app/pages.css"/>
+<style>
+  html, body { background: #f0eee9; }
+  /* Browser-window inner needs to host our dark app */
+  .crm-frame {
+    width: 1440px; height: 900px;
+    background: var(--bg);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .crm-frame .app { height: 100%; }
+  .dot.pulse { animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+  /* Browser chrome trim */
+  .bw-shell { width: 1440px; }
+  .bw-shell .crm-frame { border-radius: 0 0 12px 12px; height: 870px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel" src="design-canvas.jsx"></script>
+<script type="text/babel" src="browser-window.jsx"></script>
+
+<script type="text/babel">
+// browser-window.jsx exports ChromeWindow, not BrowserWindow — alias it.
+window.BrowserWindow = ChromeWindow;
+</script>
+
+<script type="text/babel" src="app/icons.jsx"></script>
+<script type="text/babel" src="app/shell.jsx"></script>
+<script type="text/babel" src="app/page-dashboard.jsx"></script>
+<script type="text/babel" src="app/page-contacts.jsx"></script>
+<script type="text/babel" src="app/page-pipeline.jsx"></script>
+<script type="text/babel" src="app/page-campaigns.jsx"></script>
+<script type="text/babel" src="app/page-automation.jsx"></script>
+<script type="text/babel" src="app/page-inbox.jsx"></script>
+<script type="text/babel" src="app/main.jsx"></script>
+
+<script type="text/babel">
+const { useState: rUS } = React;
+
+function FramedApp({ initial }) {
+  return (
+    <div data-screen-label={`PhantomCore · ${initial}`}>
+      <ChromeWindow
+        url={`app.phantomcore.io/${initial === 'dashboard' ? '' : initial}`}
+        width={1440}
+        height={900}
+        tabs={[
+          { title: 'PhantomCore CRM' },
+          { title: 'Meta Business' },
+          { title: 'Stripe Dashboard' },
+        ]}
+        activeIndex={0}
+      >
+        <div style={{ width: '100%', height: '100%', background: 'var(--bg)' }}>
+          <CRMApp initial={initial}/>
+        </div>
+      </ChromeWindow>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <DesignCanvas
+      title="PhantomCore CRM"
+      subtitle="A modern marketing + CRM workspace · 6 core screens"
+    >
+      <DCSection id="overview" title="Overview" subtitle="The whole product, end-to-end">
+        <DCArtboard id="dashboard" label="01 · Dashboard" width={1440} height={900}>
+          <CRMApp initial="dashboard"/>
+        </DCArtboard>
+        <DCArtboard id="contacts" label="02 · Contacts" width={1440} height={900}>
+          <CRMApp initial="contacts"/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="sales" title="Sales" subtitle="Pipeline + deal management">
+        <DCArtboard id="pipeline" label="03 · Pipeline (Kanban)" width={1440} height={900}>
+          <CRMApp initial="pipeline"/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="growth" title="Growth" subtitle="Multi-channel campaigns + automations">
+        <DCArtboard id="campaigns" label="04 · Campaigns" width={1440} height={900}>
+          <CRMApp initial="campaigns"/>
+        </DCArtboard>
+        <DCArtboard id="automation" label="05 · Automation builder" width={1440} height={900}>
+          <CRMApp initial="automation"/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="comms" title="Conversations" subtitle="Unified inbox · Email · WhatsApp · SMS">
+        <DCArtboard id="inbox" label="06 · Inbox" width={1440} height={900}>
+          <CRMApp initial="inbox"/>
+        </DCArtboard>
+      </DCSection>
+
+      <DCSection id="framed" title="Framed preview" subtitle="In a browser window — for context">
+        <DCArtboard id="framed-dash" label="Dashboard · in browser" width={1440} height={970}>
+          <FramedApp initial="dashboard"/>
+        </DCArtboard>
+      </DCSection>
+    </DesignCanvas>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
