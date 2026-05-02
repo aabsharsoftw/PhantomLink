@@ -11,7 +11,7 @@ const NAV_PRIMARY = [
   { id: 'inbox',       href: '/inbox',       label: 'Conversations', icon: 'inbox', badge: 23 },
   { id: 'calendars',   href: '/calendars',   label: 'Calendars',     icon: 'cal' },
   { id: 'contacts',    href: '/contacts',    label: 'Contacts',      icon: 'contact', count: 12482 },
-  { id: 'pipeline',    href: '/pipeline',    label: 'Opportunities', icon: 'pipeline' },
+  { id: 'pipeline',    href: '/pipeline',    label: 'Lead Management', icon: 'pipeline' },
   { id: 'payments',    href: '/payments',    label: 'Payments',      icon: 'payments' },
 ]
 const NAV_MARKETING = [

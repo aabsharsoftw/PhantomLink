@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactElement, ReactNode } from 'react'
+import { ReactElement, ReactNode, useState } from 'react'
 import { Topbar } from '@/components/CRMShell'
 import { I } from '@/components/icons'
 
@@ -209,19 +209,29 @@ function ActivityFeed() {
   )
 }
 
+const PERIOD_DATA: Record<string, { subtitle: string; contacts: string; leads: string; campaigns: string; messages: string; automations: string; convos: string; contactsDelta: string; leadsDelta: string }> = {
+  today:  { subtitle: 'Today · May 2, 2026',         contacts: '48',     leads: '₹2.1L',  campaigns: '3',   messages: '1,240', automations: '84',   convos: '23', contactsDelta: '+12', leadsDelta: '+₹40K' },
+  '7d':   { subtitle: 'Last 7 days · Apr 26–May 2',  contacts: '312',    leads: '₹8.4L',  campaigns: '12',  messages: '9,820', automations: '640',  convos: '23', contactsDelta: '+6.2%', leadsDelta: '+8.1%' },
+  '30d':  { subtitle: 'Acme Marketing · Apr 1–Apr 30', contacts: '12,482', leads: '₹38.2L', campaigns: '187', messages: '48,210', automations: '2,914', convos: '23', contactsDelta: '+8.4%', leadsDelta: '+12.1%' },
+  '90d':  { subtitle: 'Last 90 days · Feb–Apr 2026', contacts: '12,482', leads: '₹94.6L', campaigns: '480', messages: '142,800', automations: '8,240', convos: '23', contactsDelta: '+18.2%', leadsDelta: '+24.4%' },
+}
+
 export default function DashboardPage() {
+  const [period, setPeriod] = useState('30d')
+  const d = PERIOD_DATA[period] || PERIOD_DATA['30d']
+
   return (
     <>
       <Topbar
         title="Dashboard"
-        subtitle="Acme Marketing · Apr 1 – Apr 30"
+        subtitle={d.subtitle}
         actions={<>
           <div className="row gap-1 segment">
-            <button className="seg-btn">Today</button>
-            <button className="seg-btn">7d</button>
-            <button className="seg-btn active">30d</button>
-            <button className="seg-btn">90d</button>
-            <button className="seg-btn">Custom</button>
+            {(['today','7d','30d','90d'] as const).map(p => (
+              <button key={p} className={`seg-btn${period === p ? ' active' : ''}`} onClick={() => setPeriod(p)}>
+                {p === 'today' ? 'Today' : p}
+              </button>
+            ))}
           </div>
           <button className="btn"><I.download size={14} /> Export</button>
           <button className="btn primary"><I.plus size={14} /> Quick action</button>
@@ -229,12 +239,12 @@ export default function DashboardPage() {
       />
       <div className="page">
         <div className="kpi-grid">
-          <Kpi label="Total contacts" value="12,482" delta="+8.4%" deltaUp icon={I.contact} color="#6366F1" sparkData={[12,14,13,16,18,22,21,24,28,30,33,36,42]} />
-          <Kpi label="Active leads" value="₹38.2L" delta="+12.1%" deltaUp icon={I.pipeline} color="#22C55E" sparkData={[8,10,12,11,14,16,18,17,20,22,24,28,32]} />
-          <Kpi label="Campaigns sent" value="187" delta="+4.6%" deltaUp icon={I.campaign} color="#A78BFA" sparkData={[2,4,5,8,7,10,12,11,14,16,15,18,20]} />
-          <Kpi label="Messages delivered" value="48,210" delta="+22.0%" deltaUp icon={I.send} color="#3B82F6" sparkData={[20,18,24,26,30,28,34,38,40,44,48,52,58]} />
-          <Kpi label="Automation runs" value="2,914" delta="-1.2%" icon={I.flow} color="#EC4899" sparkData={[40,38,42,44,40,38,36,34,38,36,34,32,30]} />
-          <Kpi label="Open conversations" value="23" delta="+3" deltaUp icon={I.inbox} color="#F59E0B" sparkData={[8,10,12,14,12,16,18,15,20,22,18,21,23]} />
+          <Kpi label="Total contacts"       value={d.contacts}    delta={d.contactsDelta} deltaUp icon={I.contact}  color="#6366F1" sparkData={[12,14,13,16,18,22,21,24,28,30,33,36,42]} />
+          <Kpi label="Active leads"         value={d.leads}       delta={d.leadsDelta}    deltaUp icon={I.pipeline} color="#22C55E" sparkData={[8,10,12,11,14,16,18,17,20,22,24,28,32]} />
+          <Kpi label="Campaigns sent"       value={d.campaigns}   delta="+4.6%"           deltaUp icon={I.campaign} color="#A78BFA" sparkData={[2,4,5,8,7,10,12,11,14,16,15,18,20]} />
+          <Kpi label="Messages delivered"   value={d.messages}    delta="+22.0%"          deltaUp icon={I.send}     color="#3B82F6" sparkData={[20,18,24,26,30,28,34,38,40,44,48,52,58]} />
+          <Kpi label="Automation runs"      value={d.automations} delta="-1.2%"                   icon={I.flow}     color="#EC4899" sparkData={[40,38,42,44,40,38,36,34,38,36,34,32,30]} />
+          <Kpi label="Open conversations"   value={d.convos}      delta="+3"              deltaUp icon={I.inbox}    color="#F59E0B" sparkData={[8,10,12,14,12,16,18,15,20,22,18,21,23]} />
         </div>
 
         <div className="dash-grid" style={{ marginTop: 16 }}>
