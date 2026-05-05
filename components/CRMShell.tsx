@@ -2,22 +2,24 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ReactNode } from 'react'
+import { ReactNode, useState, useEffect } from 'react'
 import { I } from './icons'
 
 const NAV_PRIMARY = [
   { id: 'dashboard',   href: '/dashboard',   label: 'Dashboard',       icon: 'dash' },
-  { id: 'inbox',       href: '/inbox',       label: 'Conversations',   icon: 'inbox', badge: 23 },
-  { id: 'calendars',   href: '/calendars',   label: 'Calendars',       icon: 'cal' },
   { id: 'contacts',    href: '/contacts',    label: 'Contacts',        icon: 'contact', count: 12482 },
+  { id: 'inbox',       href: '/inbox',       label: 'Conversations',   icon: 'inbox', badge: 23 },
   { id: 'pipeline',    href: '/pipeline',    label: 'Lead Management', icon: 'pipeline' },
+  { id: 'calendars',   href: '/calendars',   label: 'Calendars',       icon: 'cal' },
 ]
 const NAV_MARKETING = [
   { id: 'campaigns',   href: '/campaigns',   label: 'Marketing',        icon: 'campaign' },
-  { id: 'automation',  href: '/automation',  label: 'Automation',       icon: 'flow' },
+  { id: 'automation',  href: '/automation',  label: 'AI Automation',    icon: 'flow' },
   { id: 'templates',   href: '/templates',   label: 'Templates',        icon: 'paper' },
+  { id: 'social',      href: '/social',      label: 'Social Planner',   icon: 'share' },
   { id: 'memberships', href: '/memberships', label: 'Memberships',      icon: 'members' },
   { id: 'reputation',  href: '/reputation',  label: 'Google Reviews',   icon: 'reviews', badge: 4 },
+  { id: 'ai',          href: '/ai',          label: 'AI Agents',        icon: 'ai' },
 ]
 const NAV_INTELLIGENCE = [
   { id: 'reporting',   href: '/reporting',   label: 'Reporting',     icon: 'chart' },
@@ -35,12 +37,8 @@ function NavItem({ href, label, icon, badge, count, tag }: {
   const pathname = usePathname()
   const isActive = pathname === href || pathname.startsWith(href + '/')
   const Ico = I[icon]
-
   return (
-    <Link
-      href={href}
-      className={`nav-item${isActive ? ' active' : ''}`}
-    >
+    <Link href={href} className={`nav-item${isActive ? ' active' : ''}`}>
       <Ico size={15} />
       <span className="flex-1" style={{ textAlign: 'left' }}>{label}</span>
       {tag && <span className="nav-tag">{tag}</span>}
@@ -139,6 +137,18 @@ export function Topbar({ title, subtitle, actions, breadcrumb }: {
   actions?: ReactNode
   breadcrumb?: string[]
 }) {
+  const [theme, setThemeState] = useState<'dark' | 'light'>('dark')
+
+  useEffect(() => {
+    const stored = localStorage.getItem('ph-theme') as 'dark' | 'light' | null
+    if (stored) setThemeState(stored)
+  }, [])
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('light', theme === 'light')
+    localStorage.setItem('ph-theme', theme)
+  }, [theme])
+
   return (
     <header className="topbar">
       <div className="col gap-1 flex-1">
@@ -161,6 +171,15 @@ export function Topbar({ title, subtitle, actions, breadcrumb }: {
         {actions}
         <button className="icon-btn" title="Help"><I.flask size={15} /></button>
         <button className="icon-btn"><I.bell size={16} /><span className="dot-badge" /></button>
+        {/* Theme toggle */}
+        <button
+          className="icon-btn"
+          title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          onClick={() => setThemeState(t => t === 'dark' ? 'light' : 'dark')}
+          style={{ fontSize: 15, width: 32, height: 32 }}
+        >
+          {theme === 'dark' ? '☀' : '☾'}
+        </button>
         <div className="topbar-divider" />
         <button className="btn ghost"><I.spark size={14} /> Ask AI</button>
       </div>

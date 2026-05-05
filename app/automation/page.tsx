@@ -295,7 +295,7 @@ export default function AutomationPage() {
   return (
     <>
       <Topbar
-        title="Automation"
+        title="AI Automation"
         actions={<>
           <button className="btn ghost" style={{ fontSize: 12 }}>What&apos;s new</button>
           <button className="btn" style={{ background: 'color-mix(in srgb, #6366F1 15%, transparent)', color: '#A78BFA', borderColor: 'rgba(99,102,241,.3)', fontSize: 12 }}>Automation Updates</button>

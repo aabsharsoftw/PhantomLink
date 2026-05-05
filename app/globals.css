@@ -859,3 +859,40 @@ input, textarea, select { font-family: inherit; }
   animation: toast-in .2s ease;
 }
 @keyframes toast-in { from { opacity: 0; transform: translateX(-50%) translateY(8px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+/* ===== LIGHT THEME ===== */
+html.light {
+  --bg: #F0F2F5;
+  --bg-elev: #FAFBFC;
+  --bg-elev-2: #F5F6F8;
+  --surface: #FFFFFF;
+  --surface-2: #F3F4F6;
+  --surface-hover: #EEF0F4;
+  --border: #E1E4EC;
+  --border-strong: #CDD1DC;
+  --border-soft: #EDF0F5;
+  --text: #111827;
+  --text-2: #4B5563;
+  --text-3: #9CA3AF;
+  --text-4: #D1D5DB;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.08);
+  --shadow-md: 0 4px 14px rgba(0,0,0,.10);
+  --shadow-lg: 0 8px 30px rgba(0,0,0,.12);
+}
+
+/* Keep sidebar always dark */
+html.light .sidebar {
+  --bg: #0A0B0F;
+  --bg-elev: #101218;
+  --bg-elev-2: #161922;
+  --surface: #13151D;
+  --surface-2: #181B25;
+  --surface-hover: #1D2030;
+  --border: #1F2330;
+  --border-strong: #2A2F40;
+  --border-soft: #181B25;
+  --text: #E7E9EE;
+  --text-2: #A8ADBD;
+  --text-3: #6C7187;
+  --text-4: #4A4F62;
+}
