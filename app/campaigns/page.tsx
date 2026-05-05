@@ -567,6 +567,12 @@ export default function CampaignsPage() {
     }
   }
 
+  function openScheduler(c: Campaign) {
+    setSendCamp(c)
+    setSendView(true)
+    setSelected(null)
+  }
+
   function handlePause(id: number) {
     setCamps(prev => prev.map(c => c.id === id ? { ...c, status: 'scheduled' } : c))
     setSelected(prev => prev ? { ...prev, status: 'scheduled' } : prev)
@@ -662,6 +668,16 @@ export default function CampaignsPage() {
                     <td className="muted">{c.date}</td>
                     <td onClick={e => e.stopPropagation()}>
                       <div className="row gap-1">
+                        {c.ch === 'mail' && (
+                          <button
+                            className="btn sm primary"
+                            title="Send or Schedule"
+                            onClick={() => handleLaunch(c)}
+                            style={{ fontSize: 11, padding: '4px 10px' }}
+                          >
+                            <I.send size={11} /> Send
+                          </button>
+                        )}
                         <button className="icon-btn" title="Duplicate" onClick={() => handleDuplicate(c)}><I.copy size={13} /></button>
                         <button className="icon-btn"><I.more size={14} /></button>
                       </div>
@@ -690,9 +706,13 @@ export default function CampaignsPage() {
 
           <div className="detail-section">
             <div className="row gap-2">
-              {selected.status === 'draft' || selected.status === 'scheduled' ? (
+              {selected.ch === 'mail' ? (
+                <button className="btn sm primary" style={{ flex: 1 }} onClick={() => openScheduler(selected)}>
+                  <I.send size={12} /> Send or Schedule
+                </button>
+              ) : selected.status === 'draft' || selected.status === 'scheduled' ? (
                 <button className="btn sm primary" style={{ flex: 1 }} onClick={() => handleLaunch(selected)}>
-                  <I.send size={12} /> {selected.ch === 'mail' ? 'Send or Schedule' : 'Launch'}
+                  <I.send size={12} /> Launch
                 </button>
               ) : selected.status === 'running' ? (
                 <button className="btn sm" style={{ flex: 1 }} onClick={() => handlePause(selected.id)}><I.pause size={12} /> Pause</button>
