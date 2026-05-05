@@ -11,7 +11,6 @@ const NAV_PRIMARY = [
   { id: 'calendars',   href: '/calendars',   label: 'Calendars',       icon: 'cal' },
   { id: 'contacts',    href: '/contacts',    label: 'Contacts',        icon: 'contact', count: 12482 },
   { id: 'pipeline',    href: '/pipeline',    label: 'Lead Management', icon: 'pipeline' },
-  { id: 'payments',    href: '/payments',    label: 'Payments',        icon: 'payments' },
 ]
 const NAV_MARKETING = [
   { id: 'campaigns',   href: '/campaigns',   label: 'Marketing',        icon: 'campaign' },
