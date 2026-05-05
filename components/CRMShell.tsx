@@ -16,13 +16,11 @@ const NAV_MARKETING = [
   { id: 'campaigns',   href: '/campaigns',   label: 'Marketing',        icon: 'campaign' },
   { id: 'automation',  href: '/automation',  label: 'Automation',       icon: 'flow' },
   { id: 'templates',   href: '/templates',   label: 'Templates',        icon: 'paper' },
-  { id: 'sites',       href: '/sites',       label: 'Sites & Funnels',  icon: 'funnel' },
   { id: 'memberships', href: '/memberships', label: 'Memberships',      icon: 'members' },
   { id: 'reputation',  href: '/reputation',  label: 'Google Reviews',   icon: 'reviews', badge: 4 },
 ]
 const NAV_INTELLIGENCE = [
   { id: 'reporting',   href: '/reporting',   label: 'Reporting',     icon: 'chart' },
-  { id: 'ai',          href: '/ai',          label: 'AI Employees',  icon: 'ai', tag: 'New' },
 ]
 const NAV_BOTTOM = [
   { id: 'apps',        href: '/apps',        label: 'App Marketplace', icon: 'store' },
