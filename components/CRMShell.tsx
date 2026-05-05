@@ -13,7 +13,7 @@ const NAV_PRIMARY = [
   { id: 'pipeline',    href: '/pipeline',    label: 'Lead Management', icon: 'pipeline' },
 ]
 const NAV_MARKETING = [
-  { id: 'campaigns',   href: '/campaigns',   label: 'Campaigns',        icon: 'campaign' },
+  { id: 'campaigns',   href: '/campaigns',   label: 'Marketing',        icon: 'campaign' },
   { id: 'automation',  href: '/automation',  label: 'Automation',       icon: 'flow' },
   { id: 'templates',   href: '/templates',   label: 'Templates',        icon: 'paper' },
   { id: 'memberships', href: '/memberships', label: 'Memberships',      icon: 'members' },
