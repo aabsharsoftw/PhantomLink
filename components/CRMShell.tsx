@@ -25,7 +25,6 @@ const NAV_INTELLIGENCE = [
   { id: 'reporting',   href: '/reporting',   label: 'Reporting',     icon: 'chart' },
 ]
 const NAV_BOTTOM = [
-  { id: 'apps',        href: '/apps',        label: 'App Marketplace', icon: 'store' },
   { id: 'admin',       href: '/admin',       label: 'Agency view',     icon: 'shield' },
   { id: 'settings',    href: '/settings',    label: 'Settings',        icon: 'cog' },
 ]
