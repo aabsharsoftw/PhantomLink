@@ -1,7 +1,7 @@
 'use client'
 
 import { ReactNode, useState } from 'react'
-import { CRMShell, Topbar } from '@/components/CRMShell'
+import { Topbar } from '@/components/CRMShell'
 import { I } from '@/components/icons'
 
 type Platform = 'instagram' | 'facebook' | 'linkedin' | 'tiktok'
@@ -147,7 +147,7 @@ export default function SocialPage() {
   )
 
   return (
-    <CRMShell>
+    <>
       <Topbar
         title="Social Planner"
         subtitle={`${posts.filter(p => p.status === 'Published').length} published · ${posts.filter(p => p.status === 'Scheduled').length} scheduled`}
@@ -423,6 +423,6 @@ export default function SocialPage() {
           </div>
         </div>
       )}
-    </CRMShell>
+    </>
   )
 }

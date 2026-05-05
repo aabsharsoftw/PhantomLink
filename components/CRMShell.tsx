@@ -2,13 +2,14 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ReactNode, useState, useEffect } from 'react'
+import { ReactNode, useState, useEffect, createContext, useContext } from 'react'
 import { I } from './icons'
 
 const NAV_PRIMARY = [
   { id: 'dashboard',   href: '/dashboard',   label: 'Dashboard',       icon: 'dash' },
   { id: 'contacts',    href: '/contacts',    label: 'Contacts',        icon: 'contact', count: 12482 },
   { id: 'inbox',       href: '/inbox',       label: 'Conversations',   icon: 'inbox', badge: 23 },
+  { id: 'telephony',   href: '/telephony',   label: 'Telephony',       icon: 'phone' },
   { id: 'pipeline',    href: '/pipeline',    label: 'Lead Management', icon: 'pipeline' },
   { id: 'calendars',   href: '/calendars',   label: 'Calendars',       icon: 'cal' },
 ]
@@ -17,7 +18,6 @@ const NAV_MARKETING = [
   { id: 'automation',  href: '/automation',  label: 'AI Automation',    icon: 'flow' },
   { id: 'templates',   href: '/templates',   label: 'Templates',        icon: 'paper' },
   { id: 'social',      href: '/social',      label: 'Social Planner',   icon: 'share' },
-  { id: 'memberships', href: '/memberships', label: 'Memberships',      icon: 'members' },
   { id: 'reputation',  href: '/reputation',  label: 'Google Reviews',   icon: 'reviews', badge: 4 },
   { id: 'ai',          href: '/ai',          label: 'AI Agents',        icon: 'ai' },
 ]
@@ -29,6 +29,11 @@ const NAV_BOTTOM = [
   { id: 'admin',       href: '/admin',       label: 'Agency view',     icon: 'shield' },
   { id: 'settings',    href: '/settings',    label: 'Settings',        icon: 'cog' },
 ]
+
+type Theme = 'dark' | 'light'
+const ThemeCtx = createContext<{ theme: Theme; toggle: () => void }>({
+  theme: 'dark', toggle: () => {},
+})
 
 function NavItem({ href, label, icon, badge, count, tag }: {
   href: string; label: string; icon: string
@@ -137,18 +142,7 @@ export function Topbar({ title, subtitle, actions, breadcrumb }: {
   actions?: ReactNode
   breadcrumb?: string[]
 }) {
-  const [theme, setThemeState] = useState<'dark' | 'light'>('dark')
-
-  useEffect(() => {
-    const stored = localStorage.getItem('ph-theme') as 'dark' | 'light' | null
-    if (stored) setThemeState(stored)
-  }, [])
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('light', theme === 'light')
-    localStorage.setItem('ph-theme', theme)
-  }, [theme])
-
+  const { theme, toggle } = useContext(ThemeCtx)
   return (
     <header className="topbar">
       <div className="col gap-1 flex-1">
@@ -171,11 +165,10 @@ export function Topbar({ title, subtitle, actions, breadcrumb }: {
         {actions}
         <button className="icon-btn" title="Help"><I.flask size={15} /></button>
         <button className="icon-btn"><I.bell size={16} /><span className="dot-badge" /></button>
-        {/* Theme toggle */}
         <button
           className="icon-btn"
           title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-          onClick={() => setThemeState(t => t === 'dark' ? 'light' : 'dark')}
+          onClick={toggle}
           style={{ fontSize: 15, width: 32, height: 32 }}
         >
           {theme === 'dark' ? '☀' : '☾'}
@@ -188,13 +181,27 @@ export function Topbar({ title, subtitle, actions, breadcrumb }: {
 }
 
 export function CRMShell({ children }: { children: ReactNode }) {
+  const [theme, setTheme] = useState<Theme>('dark')
+
+  useEffect(() => {
+    const stored = localStorage.getItem('ph-theme') as Theme | null
+    if (stored === 'light') setTheme('light')
+  }, [])
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('light', theme === 'light')
+    localStorage.setItem('ph-theme', theme)
+  }, [theme])
+
   return (
-    <div className="app">
-      <Sidebar />
-      <ContextStrip />
-      <main className="main">
-        {children}
-      </main>
-    </div>
+    <ThemeCtx.Provider value={{ theme, toggle: () => setTheme(t => t === 'dark' ? 'light' : 'dark') }}>
+      <div className="app">
+        <Sidebar />
+        <ContextStrip />
+        <main className="main">
+          {children}
+        </main>
+      </div>
+    </ThemeCtx.Provider>
   )
 }
