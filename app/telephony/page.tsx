@@ -159,8 +159,23 @@ export default function TelephonyPage() {
       </div>
 
       {/* Tabs */}
-      <div className="tab-row" style={{ padding: '0 24px', borderBottom: '1px solid var(--border)' }}>
-        {TABS.map(t => <button key={t} className={`tab-btn${tab === t ? ' active' : ''}`} onClick={() => setTab(t)}>{t}</button>)}
+      <div style={{ padding: '16px 24px 0', borderBottom: '1px solid var(--border)', marginBottom: 0 }}>
+        <div style={{ display: 'inline-flex', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 12, padding: 4, gap: 2 }}>
+          {TABS.map(t => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              style={{
+                padding: '7px 16px', borderRadius: 8, border: 'none', fontSize: 12,
+                fontWeight: tab === t ? 600 : 500, cursor: 'pointer', whiteSpace: 'nowrap',
+                background: tab === t ? 'var(--accent)' : 'transparent',
+                color: tab === t ? '#fff' : 'var(--text-3)',
+                boxShadow: tab === t ? '0 1px 4px rgba(99,102,241,.35)' : 'none',
+                transition: 'all .15s',
+              }}
+            >{t}</button>
+          ))}
+        </div>
       </div>
 
       {/* ── Phone Numbers ── */}
