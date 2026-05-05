@@ -32,7 +32,7 @@ export default function ReputationPage() {
   return (
     <>
       <Topbar
-        title="Reputation"
+        title="Google Reviews"
         subtitle="284 reviews · 4 awaiting reply"
         actions={<>
           <button className="btn"><I.send size={13} /> Request reviews</button>

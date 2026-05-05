@@ -6,20 +6,20 @@ import { ReactNode } from 'react'
 import { I } from './icons'
 
 const NAV_PRIMARY = [
-  { id: 'dashboard',   href: '/dashboard',   label: 'Dashboard',     icon: 'dash' },
-  { id: 'launchpad',   href: '/launchpad',   label: 'Launchpad',     icon: 'rocket' },
-  { id: 'inbox',       href: '/inbox',       label: 'Conversations', icon: 'inbox', badge: 23 },
-  { id: 'calendars',   href: '/calendars',   label: 'Calendars',     icon: 'cal' },
-  { id: 'contacts',    href: '/contacts',    label: 'Contacts',      icon: 'contact', count: 12482 },
+  { id: 'dashboard',   href: '/dashboard',   label: 'Dashboard',       icon: 'dash' },
+  { id: 'inbox',       href: '/inbox',       label: 'Conversations',   icon: 'inbox', badge: 23 },
+  { id: 'calendars',   href: '/calendars',   label: 'Calendars',       icon: 'cal' },
+  { id: 'contacts',    href: '/contacts',    label: 'Contacts',        icon: 'contact', count: 12482 },
   { id: 'pipeline',    href: '/pipeline',    label: 'Lead Management', icon: 'pipeline' },
-  { id: 'payments',    href: '/payments',    label: 'Payments',      icon: 'payments' },
+  { id: 'payments',    href: '/payments',    label: 'Payments',        icon: 'payments' },
 ]
 const NAV_MARKETING = [
-  { id: 'campaigns',   href: '/campaigns',   label: 'Marketing',      icon: 'campaign' },
-  { id: 'automation',  href: '/automation',  label: 'Automation',     icon: 'flow' },
-  { id: 'sites',       href: '/sites',       label: 'Sites & Funnels',icon: 'funnel' },
-  { id: 'memberships', href: '/memberships', label: 'Memberships',    icon: 'members' },
-  { id: 'reputation',  href: '/reputation',  label: 'Reputation',     icon: 'reviews', badge: 4 },
+  { id: 'campaigns',   href: '/campaigns',   label: 'Marketing',        icon: 'campaign' },
+  { id: 'automation',  href: '/automation',  label: 'Automation',       icon: 'flow' },
+  { id: 'templates',   href: '/templates',   label: 'Templates',        icon: 'paper' },
+  { id: 'sites',       href: '/sites',       label: 'Sites & Funnels',  icon: 'funnel' },
+  { id: 'memberships', href: '/memberships', label: 'Memberships',      icon: 'members' },
+  { id: 'reputation',  href: '/reputation',  label: 'Google Reviews',   icon: 'reviews', badge: 4 },
 ]
 const NAV_INTELLIGENCE = [
   { id: 'reporting',   href: '/reporting',   label: 'Reporting',     icon: 'chart' },
